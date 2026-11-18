@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stubs – Find events, get tickets</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f1fa;--surface:#fff;--ink:#1d1a3a;--muted:#5d5a7a;--line:#d9d5ee;--accent:#ff4f7b;--blue:#3a5bff;--sun:#ffd23f;--on-accent:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15132b;--surface:#201d3d;--ink:#f1efff;--muted:#a9a5cc;--line:#37335f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15132b;--surface:#201d3d;--ink:#f1efff;--muted:#a9a5cc;--line:#37335f;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{font-weight:800;font-size:1.5rem;letter-spacing:-.02em}
+.logo span{display:inline-block;background:var(--accent);color:var(--on-accent);padding:0 .35em;border-radius:6px;transform:rotate(-4deg);margin-right:.15em}
+.mytix{border:2px solid var(--ink);background:none;border-radius:999px;padding:6px 16px;cursor:pointer;font-weight:600}
+.hero{padding:28px 0 20px}
+h1{font-size:clamp(2.4rem,7vw,4.6rem);line-height:.98;letter-spacing:-.035em;font-weight:800;margin:0 0 14px;max-width:14ch}
+.hero p{color:var(--muted);max-width:46ch;margin:0 0 22px;font-size:1.1rem}
+.search{display:flex;gap:10px;flex-wrap:wrap}
+.search input{flex:1 1 260px;padding:14px 18px;border-radius:14px;border:2px solid var(--ink);background:var(--surface)}
+.search select{padding:14px 16px;border-radius:14px;border:2px solid var(--ink);background:var(--surface)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:18px 0 8px}
+.chip{flex:none;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 16px;cursor:pointer;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.count{color:var(--muted);margin:10px 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding-bottom:50px}
+.ticket{display:flex;background:var(--surface);border-radius:16px;border:2px solid var(--ink);cursor:pointer;text-align:left;padding:0;overflow:hidden;width:100%}
+.ticket:hover{transform:translateY(-3px);box-shadow:0 6px 0 var(--ink)}
+.stub{flex:none;width:84px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#1d1a3a;border-right:2px dashed var(--ink);padding:10px 4px}
+.stub b{font-size:2rem;line-height:1;font-weight:800}
+.stub small{font-weight:600}
+.body{padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.body h3{margin:0;font-size:1.2rem;line-height:1.2;letter-spacing:-.01em}
+.meta{color:var(--muted);font-size:.92rem}
+.price{margin-top:8px;font-weight:800}
+.low{color:var(--accent);font-weight:600;font-size:.85rem;margin-left:6px}
+.empty{grid-column:1/-1;padding:40px 0;color:var(--muted)}
+dialog{border:2px solid var(--ink);border-radius:20px;padding:0;max-width:460px;width:calc(100% - 32px);background:var(--surface);color:var(--ink)}
+dialog::backdrop{background:rgba(20,18,45,.6)}
+.dlg{padding:24px}
+.dlg h2{margin:0 0 4px;font-size:1.6rem;letter-spacing:-.02em;line-height:1.1}
+.row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.qty{display:flex;align-items:center;gap:12px}
+.qty button{width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);background:none;cursor:pointer;font-size:1.2rem;line-height:1}
+.btn{width:100%;margin-top:18px;padding:14px;border:2px solid var(--ink);border-radius:14px;background:var(--accent);color:var(--on-accent);font-weight:800;font-size:1.05rem;cursor:pointer}
+.btn.alt{background:none;color:var(--ink);margin-top:10px}
+.x{float:right;background:none;border:0;font-size:1.6rem;cursor:pointer;line-height:1}
+label{display:block;margin-top:12px;font-weight:600}
+.field{width:100%;padding:11px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg);margin-top:4px}
+.err{color:var(--accent);min-height:1.3em;margin:8px 0 0;font-size:.92rem}
+.qr{display:grid;grid-template-columns:repeat(9,1fr);width:150px;margin:16px auto;border:6px solid #fff;outline:2px solid var(--ink)}
+.qr i{aspect-ratio:1;background:#fff}.qr i.on{background:#1d1a3a}
+.tk{border:2px dashed var(--ink);border-radius:14px;padding:12px 16px;margin-top:12px}
+@media (prefers-reduced-motion:no-preference){.ticket{transition:transform .15s,box-shadow .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo"><span>S</span>tubs</div><button class="mytix" id="mytix">My tickets (0)</button></header>
+<section class="hero">
+<h1>Find something to do this week.</h1>
+<p>Browse events near you, pick your seats, and keep your tickets in one place.</p>
+<div class="search">
+<input id="q" type="search" placeholder="Search events, artists, venues" aria-label="Search events">
+<select id="city" aria-label="City"><option value="">All cities</option></select>
+</div>
+<div class="chips" id="chips" role="group" aria-label="Categories"></div>
+</section>
+<div class="count" id="count" aria-live="polite"></div>
+<main class="grid" id="grid"></main>
+</div>
+<dialog id="dlg"><div class="dlg" id="dlgbody"></div></dialog>
+<script>
+const EVENTS=[
+{id:1,t:"Neon Harbor Live",cat:"Music",city:"Austin",venue:"Mohawk",d:"2026-12-04",time:"8:00 PM",price:45,left:120,hue:"#ff4f7b"},
+{id:2,t:"Midnight Jazz Cellar",cat:"Music",city:"Chicago",venue:"The Green Door",d:"2026-12-06",time:"9:30 PM",price:30,left:14,hue:"#ffd23f"},
+{id:3,t:"Holiday Night Market",cat:"Food",city:"Portland",venue:"Pier Park",d:"2026-12-05",time:"4:00 PM",price:12,left:400,hue:"#7be0a9"},
+{id:4,t:"Stand-Up Showcase",cat:"Comedy",city:"Chicago",venue:"Laugh Lab",d:"2026-12-11",time:"7:30 PM",price:25,left:60,hue:"#9bb2ff"},
+{id:5,t:"Wine & Cheese Tasting",cat:"Food",city:"Austin",venue:"Cedar Hall",d:"2026-12-12",time:"6:00 PM",price:55,left:8,hue:"#ffb38a"},
+{id:6,t:"City Marathon 10K",cat:"Sports",city:"Portland",venue:"Waterfront Loop",d:"2026-12-13",time:"8:00 AM",price:35,left:250,hue:"#7be0a9"},
+{id:7,t:"Indie Film Night",cat:"Arts",city:"Austin",venue:"Alamo Annex",d:"2026-12-09",time:"7:00 PM",price:15,left:90,hue:"#e2a8ff"},
+{id:8,t:"Glass Blowing Workshop",cat:"Arts",city:"Portland",venue:"Ember Studio",d:"2026-12-18",time:"1:00 PM",price:80,left:12,hue:"#ffd23f"}];
+const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const $=id=>document.getElementById(id);
+let cat="All",tickets=[];
+const cats=["All",...new Set(EVENTS.map(e=>e.cat))];
+[...new Set(EVENTS.map(e=>e.city))].forEach(c=>$("city").add(new Option(c,c)));
+function dt(e){const[y,m,d]=e.d.split("-");return{m:MONTHS[+m-1],d:+d}}
+function drawChips(){$("chips").innerHTML="";cats.forEach(c=>{const b=document.createElement("button");b.className="chip";b.textContent=c;b.setAttribute("aria-pressed",c===cat);b.onclick=()=>{cat=c;drawChips();render()};$("chips").appendChild(b)})}
+function render(){
+const q=$("q").value.toLowerCase(),city=$("city").value;
+const list=EVENTS.filter(e=>(cat==="All"||e.cat===cat)&&(!city||e.city===city)&&(e.t+e.venue+e.cat).toLowerCase().includes(q));
+$("count").textContent=list.length+(list.length===1?" event":" events");
+$("grid").innerHTML=list.length?"":'<div class="empty">No events match. Try a different search or clear the filters.</div>';
+list.forEach(e=>{const{m,d}=dt(e);const b=document.createElement("button");b.className="ticket";
+b.innerHTML=`<div class="stub" style="background:${e.hue}"><small>${m}</small><b>${d}</b></div><div class="body"><h3>${e.t}</h3><span class="meta">${e.venue}, ${e.city}</span><span class="meta">${e.time} · ${e.cat}</span><span class="price">$${e.price}${e.left<20?`<span class="low">${e.left} left</span>`:""}</span></div>`;
+b.onclick=()=>openEvent(e);$("grid").appendChild(b)})}
+function open(html){$("dlgbody").innerHTML=html;if(!$("dlg").open)$("dlg").showModal()}
+function close(){$("dlg").close()}
+function openEvent(e){let n=1;const{m,d}=dt(e);
+const draw=()=>{open(`<button class="x" aria-label="Close" onclick="document.getElementById('dlg').close()">×</button><h2>${e.t}</h2><div class="meta">${m} ${d} · ${e.time}<br>${e.venue}, ${e.city}</div>
+<div class="row"><span>General admission<br><span class="meta">$${e.price} each</span></span><div class="qty"><button id="mi" aria-label="Fewer tickets">−</button><b>${n}</b><button id="pl" aria-label="More tickets">+</button></div></div>
+<div class="row"><b>Total</b><b>$${n*e.price}</b></div><button class="btn" id="go">Checkout</button>`);
+$("mi").onclick=()=>{n=Math.max(1,n-1);draw()};$("pl").onclick=()=>{n=Math.min(8,e.left,n+1);draw()};$("go").onclick=()=>checkout(e,n)};draw()}
+function checkout(e,n){open(`<button class="x" aria-label="Close" onclick="document.getElementById('dlg').close()">×</button><h2>Your details</h2><div class="meta">${n} × ${e.t} · $${n*e.price}</div>
+<label for="nm">Full name</label><input class="field" id="nm" autocomplete="name">
+<label for="em">Email for tickets</label><input class="field" id="em" type="email" autocomplete="email">
+<p class="err" id="err"></p><button class="btn" id="pay">Pay $${n*e.price}</button><button class="btn alt" id="back">Back</button>`);
+$("back").onclick=()=>openEvent(e);
+$("pay").onclick=()=>{const nm=$("nm").value.trim(),em=$("em").value.trim();
+if(!nm){$("err").textContent="Enter your full name.";return}
+if(!/^\S+@\S+\.\S+$/.test(em)){$("err").textContent="Enter a valid email address, like name@example.com.";return}
+e.left-=n;const code="STB-"+Math.random().toString(36).slice(2,8).toUpperCase();
+tickets.push({e,n,nm,code});$("mytix").textContent=`My tickets (${tickets.reduce((a,t)=>a+t.n,0)})`;render();confirmation(tickets[tickets.length-1])}}
+function qr(code){let h=0;for(const c of code)h=(h*31+c.charCodeAt(0))>>>0;let s="";for(let i=0;i<81;i++){h=(h*1103515245+12345)>>>0;s+=`<i class="${(h>>16)&1?"on":""}"></i>`}return`<div class="qr" role="img" aria-label="Ticket code ${code}">${s}</div>`}
+function confirmation(t){const{m,d}=dt(t.e);open(`<button class="x" aria-label="Close" onclick="document.getElementById('dlg').close()">×</button><h2>Tickets booked</h2><div class="meta">Sent to the email you entered.</div>${qr(t.code)}<div class="tk"><b>${t.e.t}</b><br><span class="meta">${m} ${d} · ${t.e.time} · ${t.e.venue}<br>${t.n} × General admission · ${t.nm}<br>Code ${t.code}</span></div><button class="btn alt" onclick="document.getElementById('dlg').close()">Keep browsing</button>`)}
+$("mytix").onclick=()=>{if(!tickets.length){open(`<button class="x" aria-label="Close" onclick="document.getElementById('dlg').close()">×</button><h2>My tickets</h2><p class="meta">No tickets yet. Pick an event to get started.</p>`);return}
+open(`<button class="x" aria-label="Close" onclick="document.getElementById('dlg').close()">×</button><h2>My tickets</h2>`+tickets.map((t,i)=>`<div class="tk"><b>${t.e.t}</b><br><span class="meta">${t.n} × · ${t.e.venue} · ${t.code}</span></div>`).join(""))};
+$("q").oninput=render;$("city").onchange=render;
+$("dlg").addEventListener("click",ev=>{if(ev.target===$("dlg"))close()});
+drawChips();render();
+</script>
+</body>
+</html>
